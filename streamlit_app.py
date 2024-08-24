@@ -16,6 +16,12 @@ def remove_footer(text):
     
     return text
 
+def clean_text(text):
+    # Remove excessive newlines and empty lines
+    text = re.sub(r'\n\s*\n', '\n', text)  # Replace multiple newlines with a single newline
+    text = text.strip()  # Remove leading and trailing whitespace
+    return text
+
 # Sidebar configuration for minimum character length
 min_chars = st.sidebar.slider("Minimum character length for body content", 0, 500, 25)
 
@@ -38,6 +44,8 @@ if uploaded_file is not None:
                     body_text = soup.get_text()
                     # Remove email footers and disclaimers
                     cleaned_body_text = remove_footer(body_text)
+                    # Clean text by removing excessive newlines and empty lines
+                    cleaned_body_text = clean_text(cleaned_body_text)
                     # Check if the body content meets the minimum character length
                     if len(cleaned_body_text) >= min_chars:
                         body_content.append({"body": cleaned_body_text})
