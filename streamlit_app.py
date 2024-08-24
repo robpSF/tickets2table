@@ -16,6 +16,9 @@ def remove_footer(text):
     
     return text
 
+# Sidebar configuration for minimum character length
+min_chars = st.sidebar.slider("Minimum character length for body content", 0, 500, 25)
+
 # Load JSON data from file (In Streamlit Cloud, you will need to upload the file)
 uploaded_file = st.file_uploader("Choose a JSON file", type="json")
 
@@ -35,14 +38,16 @@ if uploaded_file is not None:
                     body_text = soup.get_text()
                     # Remove email footers and disclaimers
                     cleaned_body_text = remove_footer(body_text)
-                    body_content.append({"body": cleaned_body_text})
+                    # Check if the body content meets the minimum character length
+                    if len(cleaned_body_text) >= min_chars:
+                        body_content.append({"body": cleaned_body_text})
 
     # Convert to DataFrame
     if body_content:
         df = pd.DataFrame(body_content)
 
         # Display the DataFrame in a table
-        st.write("Plain text body content from threads (excluding EventInfo, footers removed):")
+        st.write(f"Plain text body content from threads (excluding EventInfo, footers removed, min {min_chars} chars):")
         st.dataframe(df)
     else:
-        st.write("No relevant 'body' content found in the threads.")
+        st.write(f"No relevant 'body' content found with at least {min_chars} characters.")
