@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 import json
 
 # Load JSON data from file (In Streamlit Cloud, you will need to upload the file)
